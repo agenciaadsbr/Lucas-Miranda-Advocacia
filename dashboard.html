@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leads — Lucas Miranda</title>
+<meta name="robots" content="noindex,nofollow">
+<style>
+:root{
+  --bg:#0A0A0A;
+  --card:#171717;
+  --linha:#262626;
+  --linha-2:#1F1F1F;
+  --txt:#EDEDED;
+  --txt-2:#A1A1A1;
+  --txt-3:#6B6B6B;
+  --visitas:#5B8DEF;
+  --leads:#2FB86B;
+  --conv:#D6A34A;
+  --erro:#E5544B;
+  --ui:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--txt);font-family:var(--ui);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:1px solid var(--txt-2);outline-offset:2px}
+.oculto{display:none!important}
+
+/* ---------- login ---------- */
+.login{min-height:100svh;display:grid;place-items:center;padding:24px}
+.login .caixa{width:100%;max-width:330px;background:var(--card);border:1px solid var(--linha);border-radius:10px;padding:28px}
+.login h1{font-size:13px;letter-spacing:.12em;text-transform:uppercase;font-weight:600}
+.login p{color:var(--txt-3);font-size:12px;margin-top:6px}
+.campo{margin-top:18px}
+.campo label{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--txt-3);margin-bottom:6px}
+.campo input{width:100%;background:#0F0F0F;border:1px solid var(--linha);border-radius:7px;color:var(--txt);padding:10px 12px;font-size:14px;font-family:inherit}
+.campo input:focus{outline:0;border-color:#3A3A3A}
+.login button{width:100%;margin-top:22px;background:var(--txt);color:#0A0A0A;border:0;border-radius:7px;padding:11px;font-size:12px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;transition:opacity .15s}
+.login button:hover{opacity:.86}
+.login button:disabled{opacity:.5;cursor:wait}
+.aviso{margin-top:14px;font-size:12px;color:var(--erro);min-height:16px}
+
+/* ---------- topo ---------- */
+.painel{max-width:1200px;margin:0 auto;padding:26px clamp(14px,3vw,30px) 60px}
+.topo{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.topo h1{font-size:15px;letter-spacing:.14em;text-transform:uppercase;font-weight:600}
+.topo p{color:var(--txt-3);font-size:12px;margin-top:5px}
+.sair{background:transparent;border:1px solid var(--linha);border-radius:7px;color:var(--txt-2);padding:8px 15px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;transition:border-color .15s,color .15s}
+.sair:hover{border-color:#3A3A3A;color:var(--txt)}
+
+/* ---------- cards ---------- */
+.card{background:var(--card);border:1px solid var(--linha);border-radius:10px;margin-bottom:16px;overflow:hidden}
+.card-topo{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:16px 18px;border-bottom:1px solid var(--linha-2)}
+.card-topo h2{font-size:12px;letter-spacing:.11em;text-transform:uppercase;font-weight:600;color:var(--txt)}
+.card-corpo{padding:18px}
+.periodo{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.periodo span{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-3)}
+.periodo input{background:#0F0F0F;border:1px solid var(--linha);border-radius:6px;color:var(--txt-2);padding:6px 9px;font-size:12px;font-family:inherit;color-scheme:dark}
+.periodo input:focus{outline:0;border-color:#3A3A3A}
+
+/* ---------- gráfico ---------- */
+.grafico{width:100%;height:290px;display:block}
+.grafico .grade{stroke:var(--linha-2);stroke-width:1}
+.grafico .eixo{fill:var(--txt-3);font-size:10px;font-family:var(--ui)}
+.grafico path.serie{fill:none;stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+.grafico circle.ponto{stroke:var(--card);stroke-width:1.5}
+.legenda{display:flex;gap:22px;flex-wrap:wrap;padding:14px 18px 0;border-top:1px solid var(--linha-2);margin-top:14px}
+.legenda div{display:flex;align-items:center;gap:8px;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--txt-2)}
+.legenda i{width:9px;height:2px;border-radius:2px;display:block}
+.legenda b{color:var(--txt);font-weight:600;letter-spacing:0;text-transform:none}
+
+/* ---------- tabelas ---------- */
+.rolagem{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-3);font-weight:500;padding:0 14px 12px;white-space:nowrap}
+td{padding:12px 14px;border-top:1px solid var(--linha-2);color:var(--txt-2);white-space:nowrap}
+td.forte{color:var(--txt);font-weight:500}
+tbody tr:hover td{background:#1C1C1C}
+.num{font-variant-numeric:tabular-nums}
+.acao{background:transparent;border:1px solid var(--linha);border-radius:6px;color:var(--txt-2);padding:6px 12px;font-size:11px;letter-spacing:.04em;transition:border-color .15s,color .15s}
+.acao:hover{border-color:var(--leads);color:var(--leads)}
+.vazio{padding:30px 18px;text-align:center;color:var(--txt-3);font-size:13px}
+.carregando{padding:30px 18px;text-align:center;color:var(--txt-3);font-size:13px}
+
+@media (max-width:600px){
+  .card-topo{align-items:flex-start;flex-direction:column}
+  .grafico{height:230px}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<section class="login" id="tela-login">
+  <div class="caixa">
+    <h1>Leads — Lucas Miranda</h1>
+    <p>Acesso restrito ao escritório.</p>
+    <form id="form-login">
+      <div class="campo">
+        <label for="usuario">Usuário</label>
+        <input type="text" id="usuario" autocomplete="username" autocapitalize="none" required>
+      </div>
+      <div class="campo">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" autocomplete="current-password" required>
+      </div>
+      <button type="submit" id="btn-entrar">Entrar</button>
+      <p class="aviso" id="aviso-login"></p>
+    </form>
+  </div>
+</section>
+
+<!-- PAINEL -->
+<main class="painel oculto" id="tela-painel">
+  <header class="topo">
+    <div>
+      <h1>Leads — Lucas Miranda</h1>
+      <p id="total-leads">Carregando…</p>
+    </div>
+    <button class="sair" id="btn-sair">Sair</button>
+  </header>
+
+  <section class="card">
+    <div class="card-topo">
+      <h2>Evolução diária</h2>
+      <div class="periodo">
+        <span>De</span><input type="date" id="data-de">
+        <span>Até</span><input type="date" id="data-ate">
+      </div>
+    </div>
+    <div class="card-corpo">
+      <div id="area-grafico"><p class="carregando">Carregando…</p></div>
+      <div class="legenda oculto" id="legenda">
+        <div><i style="background:var(--visitas)"></i>Visitas <b id="leg-visitas">0</b></div>
+        <div><i style="background:var(--leads)"></i>Cadastros <b id="leg-leads">0</b></div>
+        <div><i style="background:var(--conv)"></i>Conversão <b id="leg-conv">0%</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-topo"><h2>Conversão por LP</h2></div>
+    <div class="rolagem">
+      <table>
+        <thead><tr><th>LP</th><th>Visitas</th><th>Leads</th><th>Conv.</th></tr></thead>
+        <tbody id="tabela-lps"><tr><td colspan="4" class="carregando">Carregando…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="card-topo"><h2>Leads</h2></div>
+    <div class="rolagem">
+      <table>
+        <thead><tr><th>Nome</th><th>WhatsApp</th><th>LP</th><th>Origem</th><th>Data</th><th>Ação</th></tr></thead>
+        <tbody id="tabela-leads"><tr><td colspan="6" class="carregando">Carregando…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script>
+/* ===================== Configuração ===================== */
+const CFG = {
+  url: "https://qxhnjzyhtllmtdrcyygi.supabase.co",
+  anon: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF4aG5qenlodGxsbXRkcmN5eWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIyMzczNjgsImV4cCI6MjA5NzgxMzM2OH0.DWf4I_x9F--H7ZZHUt_n4V3B__Nlsf1jNZdUV0vNBLU",
+  // LPs deste cliente. Para somar uma nova LP, acrescente o slug aqui.
+  sites: ["lucas-miranda"],
+  rotulos: { "lucas-miranda": "Inventário extrajudicial" },
+  cliente: "Lucas Miranda Advocacia",
+  // usuário exibido -> e-mail real no Supabase Auth
+  contas: { "admin": "admin@lucas-miranda.adsbr.internal" }
+};
+
+const CHAVE_SESSAO = "lm_dash_token";
+let TOKEN = null;
+
+/* ===================== Auth ===================== */
+async function entrar(usuario, senha){
+  const email = CFG.contas[usuario.trim().toLowerCase()];
+  if(!email) throw new Error("Usuário ou senha inválidos.");
+
+  const r = await fetch(CFG.url + "/auth/v1/token?grant_type=password", {
+    method: "POST",
+    headers: { "apikey": CFG.anon, "Content-Type": "application/json" },
+    body: JSON.stringify({ email: email, password: senha })
+  });
+  if(!r.ok) throw new Error("Usuário ou senha inválidos.");
+  const dados = await r.json();
+  if(!dados.access_token) throw new Error("Usuário ou senha inválidos.");
+  return dados.access_token;
+}
+
+function sair(){
+  TOKEN = null;
+  try{ sessionStorage.removeItem(CHAVE_SESSAO); }catch(e){}
+  document.getElementById("tela-painel").classList.add("oculto");
+  document.getElementById("tela-login").classList.remove("oculto");
+  document.getElementById("senha").value = "";
+}
+
+/* ===================== Dados ===================== */
+async function consultar(tabela, params){
+  const q = new URLSearchParams(params).toString();
+  const r = await fetch(CFG.url + "/rest/v1/" + tabela + "?" + q, {
+    headers: { "apikey": CFG.anon, "Authorization": "Bearer " + TOKEN }
+  });
+  if(r.status === 401 || r.status === 403){ sair(); throw new Error("Sessão expirada."); }
+  if(!r.ok) throw new Error("Falha ao consultar " + tabela);
+  return r.json();
+}
+
+const filtroSites = "in.(" + CFG.sites.join(",") + ")";
+
+async function carregar(){
+  const de = document.getElementById("data-de").value;
+  const ate = document.getElementById("data-ate").value;
+  const inicio = new Date(de + "T00:00:00");
+  const fim = new Date(ate + "T23:59:59.999");
+
+  const [visitas, leads] = await Promise.all([
+    consultar("lp_visits", {
+      select: "site,created_at",
+      site: filtroSites,
+      created_at: "gte." + inicio.toISOString(),
+      order: "created_at.asc",
+      limit: 10000
+    }),
+    consultar("lp_leads", {
+      select: "id,site,nome,whatsapp,origem,created_at",
+      site: filtroSites,
+      order: "created_at.desc",
+      limit: 2000
+    })
+  ]);
+
+  const visitasPeriodo = visitas.filter(function(v){ return new Date(v.created_at) <= fim; });
+  const leadsPeriodo = leads.filter(function(l){
+    const d = new Date(l.created_at); return d >= inicio && d <= fim;
+  });
+
+  document.getElementById("total-leads").textContent =
+    leads.length === 0 ? "Nenhum lead registrado até agora"
+    : leads.length + (leads.length === 1 ? " lead no total" : " leads no total");
+
+  desenharGrafico(visitasPeriodo, leadsPeriodo, inicio, fim);
+  montarLPs(visitasPeriodo, leadsPeriodo);
+  montarLeads(leadsPeriodo);
+}
+
+/* ===================== Gráfico ===================== */
+function diaChave(d){ return d.toISOString().slice(0,10); }
+
+function desenharGrafico(visitas, leads, inicio, fim){
+  const area = document.getElementById("area-grafico");
+  const legenda = document.getElementById("legenda");
+
+  const dias = [];
+  for(let d = new Date(inicio); d <= fim; d.setDate(d.getDate()+1)){
+    dias.push(diaChave(new Date(d)));
+  }
+  if(dias.length === 0 || (visitas.length === 0 && leads.length === 0)){
+    area.innerHTML = '<p class="vazio">Nenhum dado encontrado</p>';
+    legenda.classList.add("oculto");
+    return;
+  }
+
+  const porDia = {};
+  dias.forEach(function(k){ porDia[k] = { v:0, l:0 }; });
+  visitas.forEach(function(x){ const k = x.created_at.slice(0,10); if(porDia[k]) porDia[k].v++; });
+  leads.forEach(function(x){ const k = x.created_at.slice(0,10); if(porDia[k]) porDia[k].l++; });
+
+  const serieV = dias.map(function(k){ return porDia[k].v; });
+  const serieL = dias.map(function(k){ return porDia[k].l; });
+  const serieC = dias.map(function(k){ return porDia[k].v ? (porDia[k].l / porDia[k].v) * 100 : 0; });
+
+  const totV = serieV.reduce(function(a,b){ return a+b; }, 0);
+  const totL = serieL.reduce(function(a,b){ return a+b; }, 0);
+  document.getElementById("leg-visitas").textContent = totV;
+  document.getElementById("leg-leads").textContent = totL;
+  document.getElementById("leg-conv").textContent = (totV ? (totL/totV*100).toFixed(1) : "0.0") + "%";
+  legenda.classList.remove("oculto");
+
+  const L = 42, R = 46, T = 14, B = 26, W = 900, H = 290;
+  const larg = W - L - R, alt = H - T - B;
+  const maxE = Math.max(1, Math.max.apply(null, serieV.concat(serieL)));
+  const maxD = Math.max(1, Math.max.apply(null, serieC));
+
+  const x = function(i){ return L + (dias.length === 1 ? larg/2 : (i/(dias.length-1))*larg); };
+  const yE = function(v){ return T + alt - (v/maxE)*alt; };
+  const yD = function(v){ return T + alt - (v/maxD)*alt; };
+
+  function caminho(serie, escala){
+    return serie.map(function(v,i){ return (i ? "L" : "M") + x(i).toFixed(1) + " " + escala(v).toFixed(1); }).join(" ");
+  }
+
+  let svg = '<svg class="grafico" viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none" role="img" aria-label="Evolução diária de visitas, cadastros e conversão">';
+  for(let i=0;i<=4;i++){
+    const gy = T + (alt/4)*i;
+    const valor = Math.round(maxE - (maxE/4)*i);
+    svg += '<line class="grade" x1="'+L+'" y1="'+gy.toFixed(1)+'" x2="'+(W-R)+'" y2="'+gy.toFixed(1)+'"></line>';
+    svg += '<text class="eixo" x="'+(L-8)+'" y="'+(gy+3).toFixed(1)+'" text-anchor="end">'+valor+'</text>';
+    svg += '<text class="eixo" x="'+(W-R+8)+'" y="'+(gy+3).toFixed(1)+'">'+Math.round(maxD - (maxD/4)*i)+'%</text>';
+  }
+  const passo = Math.max(1, Math.ceil(dias.length/7));
+  dias.forEach(function(k,i){
+    if(i % passo && i !== dias.length-1) return;
+    const r = k.slice(8,10) + "/" + k.slice(5,7);
+    svg += '<text class="eixo" x="'+x(i).toFixed(1)+'" y="'+(H-8)+'" text-anchor="middle">'+r+'</text>';
+  });
+  svg += '<path class="serie" d="'+caminho(serieC,yD)+'" stroke="var(--conv)" stroke-dasharray="3 3"></path>';
+  svg += '<path class="serie" d="'+caminho(serieV,yE)+'" stroke="var(--visitas)"></path>';
+  svg += '<path class="serie" d="'+caminho(serieL,yE)+'" stroke="var(--leads)"></path>';
+  serieL.forEach(function(v,i){
+    if(!v) return;
+    svg += '<circle class="ponto" cx="'+x(i).toFixed(1)+'" cy="'+yE(v).toFixed(1)+'" r="2.8" fill="var(--leads)"></circle>';
+  });
+  svg += '</svg>';
+  area.innerHTML = svg;
+}
+
+/* ===================== Tabelas ===================== */
+function rotulo(site){ return CFG.rotulos[site] || site; }
+
+function montarLPs(visitas, leads){
+  const corpo = document.getElementById("tabela-lps");
+  const linhas = CFG.sites.map(function(s){
+    const v = visitas.filter(function(x){ return x.site === s; }).length;
+    const l = leads.filter(function(x){ return x.site === s; }).length;
+    return { site:s, v:v, l:l, c: v ? (l/v*100) : 0 };
+  }).filter(function(r){ return r.v || r.l; });
+
+  if(!linhas.length){
+    corpo.innerHTML = '<tr><td colspan="4" class="vazio">Nenhum dado encontrado</td></tr>';
+    return;
+  }
+  corpo.innerHTML = linhas.map(function(r){
+    return '<tr><td class="forte">'+rotulo(r.site)+'</td>'
+      + '<td class="num">'+r.v+'</td>'
+      + '<td class="num">'+r.l+'</td>'
+      + '<td class="num">'+r.c.toFixed(1)+'%</td></tr>';
+  }).join("");
+}
+
+function formatarFone(d){
+  const n = String(d).replace(/\D/g,"").replace(/^55/,"");
+  if(n.length === 11) return "("+n.slice(0,2)+") "+n.slice(2,7)+"-"+n.slice(7);
+  if(n.length === 10) return "("+n.slice(0,2)+") "+n.slice(2,6)+"-"+n.slice(6);
+  return String(d);
+}
+
+function escapar(t){
+  return String(t == null ? "" : t).replace(/[&<>"']/g, function(c){
+    return { "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c];
+  });
+}
+
+function montarLeads(leads){
+  const corpo = document.getElementById("tabela-leads");
+  if(!leads.length){
+    corpo.innerHTML = '<tr><td colspan="6" class="vazio">Nenhum lead encontrado</td></tr>';
+    return;
+  }
+  corpo.innerHTML = leads.map(function(l){
+    const d = new Date(l.created_at);
+    const data = d.toLocaleDateString("pt-BR") + " " + d.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
+    const digitos = String(l.whatsapp).replace(/\D/g,"");
+    const numero = digitos.length > 11 ? digitos : "55" + digitos;
+    const primeiro = String(l.nome || "").trim().split(" ")[0];
+    const msg = "Olá, " + primeiro + ". Recebemos seu contato através da " + CFG.cliente + " e gostaria de dar continuidade ao seu atendimento.";
+    const link = "https://wa.me/" + numero + "?text=" + encodeURIComponent(msg);
+    return '<tr>'
+      + '<td class="forte">'+escapar(l.nome)+'</td>'
+      + '<td class="num">'+escapar(formatarFone(l.whatsapp))+'</td>'
+      + '<td>'+escapar(rotulo(l.site))+'</td>'
+      + '<td>'+escapar(l.origem || "—")+'</td>'
+      + '<td class="num">'+data+'</td>'
+      + '<td><a class="acao" href="'+link+'" target="_blank" rel="noopener">WhatsApp</a></td>'
+      + '</tr>';
+  }).join("");
+}
+
+/* ===================== Boot ===================== */
+function periodoPadrao(){
+  const hoje = new Date();
+  const trintaAtras = new Date(); trintaAtras.setDate(hoje.getDate() - 29);
+  document.getElementById("data-de").value = diaChave(trintaAtras);
+  document.getElementById("data-ate").value = diaChave(hoje);
+}
+
+async function abrirPainel(){
+  document.getElementById("tela-login").classList.add("oculto");
+  document.getElementById("tela-painel").classList.remove("oculto");
+  periodoPadrao();
+  try{ await carregar(); }catch(e){ console.error(e); }
+}
+
+document.getElementById("form-login").addEventListener("submit", async function(e){
+  e.preventDefault();
+  const btn = document.getElementById("btn-entrar");
+  const aviso = document.getElementById("aviso-login");
+  aviso.textContent = "";
+  btn.disabled = true; btn.textContent = "Entrando…";
+  try{
+    TOKEN = await entrar(document.getElementById("usuario").value, document.getElementById("senha").value);
+    try{ sessionStorage.setItem(CHAVE_SESSAO, TOKEN); }catch(err){}
+    await abrirPainel();
+  }catch(err){
+    aviso.textContent = err.message;
+  }finally{
+    btn.disabled = false; btn.textContent = "Entrar";
+  }
+});
+
+document.getElementById("btn-sair").addEventListener("click", sair);
+["data-de","data-ate"].forEach(function(id){
+  document.getElementById(id).addEventListener("change", function(){
+    carregar().catch(function(e){ console.error(e); });
+  });
+});
+
+(function(){
+  let salvo = null;
+  try{ salvo = sessionStorage.getItem(CHAVE_SESSAO); }catch(e){}
+  if(salvo){ TOKEN = salvo; abrirPainel().catch(function(){ sair(); }); }
+})();
+</script>
+</body>
+</html>

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
+<script>document.documentElement.classList.add("js")</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lucas Miranda Advocacia | Inventário extrajudicial e regularização de herança</title>
@@ -62,7 +63,8 @@ h3{font-size:1.02rem;font-weight:600;line-height:1.3;text-transform:uppercase;le
 p{max-width:62ch}
 .lede{font-size:clamp(1rem,1.25vw,1.13rem);color:var(--ink-soft);line-height:1.66}
 .small{font-size:.83rem;line-height:1.6}
-.rule{width:100%;max-width:340px;height:1px;background:var(--rule-light);margin:22px 0;transform-origin:left;transform:scaleX(0);transition:transform 1s var(--ease) .12s}
+.rule{width:100%;max-width:340px;height:1px;background:var(--rule-light);margin:22px 0;transform-origin:left;transition:transform 1s var(--ease) .12s}
+.js .rule{transform:scaleX(0)}
 .in .rule,.rule.in{transform:scaleX(1)}
 
 /* ---------- ícones ---------- */
@@ -113,13 +115,13 @@ p{max-width:62ch}
 
 /* ---------- foto ---------- */
 .foto{position:relative;overflow:hidden;background:var(--navy-700)}
-.foto picture{display:contents}
-.foto picture{display:contents}
+.foto picture{position:absolute;inset:0;display:block}
 .foto img{width:100%;height:100%;object-fit:cover;object-position:center 22%;will-change:transform}
 .foto::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(10,21,36,.42) 0%,rgba(10,21,36,0) 38%,rgba(10,21,36,0) 58%,rgba(10,21,36,.9) 100%)}
 .foto .slot{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:20px;font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--white-faint)}
 .foto img ~ .slot{display:none}
-.cortina{clip-path:inset(0 0 100% 0);transition:clip-path 1.15s var(--ease)}
+.js .cortina{clip-path:inset(0 0 100% 0)}
+.cortina{transition:clip-path 1.15s var(--ease)}
 .cortina.in{clip-path:inset(0 0 0 0)}
 
 /* ---------- hero ---------- */
@@ -129,8 +131,7 @@ p{max-width:62ch}
 }
 .hero h1,.hero .logo{color:#fff}
 .hero-bg{position:absolute;inset:0;z-index:0}
-.hero-bg picture{display:contents}
-.hero-bg picture{display:contents}
+.hero-bg picture{position:absolute;inset:0;display:block}
 .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 32%;filter:saturate(.82) brightness(.82) contrast(1.03);animation:kb 22s var(--ease) forwards}
 .hero-bg::after{
   content:"";position:absolute;inset:0;
@@ -191,10 +192,12 @@ p{max-width:62ch}
 .ressalva{margin-top:24px;border-left:1px solid var(--rule-dark);padding-left:22px;color:var(--white-soft);font-size:.94rem;max-width:46ch}
 .central .foto{aspect-ratio:5/4;border-radius:3px}
 .trajeto{margin-top:clamp(52px,7vw,92px);position:relative}
-.trilho{position:absolute;left:0;right:0;top:7px;height:1px;background:var(--rule-dark);transform:scaleX(0);transform-origin:left;transition:transform 1.5s var(--ease)}
+.trilho{position:absolute;left:0;right:0;top:7px;height:1px;background:var(--rule-dark);transform-origin:left;transition:transform 1.5s var(--ease)}
+.js .trilho{transform:scaleX(0)}
 .trajeto.in .trilho{transform:scaleX(1)}
 .etapas{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(16px,2.4vw,34px)}
-.etapa{position:relative;padding-top:38px;opacity:0;transform:translateY(16px)}
+.etapa{position:relative;padding-top:38px}
+.js .etapa{opacity:0;transform:translateY(16px)}
 .trajeto.in .etapa{opacity:1;transform:none;transition:opacity .7s var(--ease),transform .7s var(--ease)}
 .trajeto.in .etapa:nth-child(1){transition-delay:.25s}
 .trajeto.in .etapa:nth-child(2){transition-delay:.5s}
@@ -240,8 +243,7 @@ p{max-width:62ch}
 
 .orientacao{overflow:hidden}
 .fundo{position:absolute;left:0;right:0;top:-9%;bottom:-9%;z-index:0;overflow:hidden}
-.fundo picture{display:contents}
-.fundo picture{display:contents}
+.fundo picture{position:absolute;inset:0;display:block}
 .fundo img{width:100%;height:100%;object-fit:cover;object-position:center;will-change:transform}
 .fundo::after{content:"";position:absolute;inset:-1px;background:linear-gradient(180deg,rgba(10,21,36,.94) 0%,rgba(10,21,36,.84) 45%,rgba(10,21,36,.94) 100%)}
 .orientacao .wrap{position:relative;z-index:1}
@@ -345,7 +347,7 @@ footer a{text-decoration:underline;text-underline-offset:3px}
 .barra-mobile.visivel{transform:none}
 
 /* ---------- revelação ---------- */
-.reveal{opacity:0;transform:translateY(18px)}
+.js .reveal{opacity:0;transform:translateY(18px)}
 .reveal.in{opacity:1;transform:none;transition:opacity .8s var(--ease),transform .8s var(--ease)}
 
 @media (max-width:900px){
@@ -831,7 +833,7 @@ if("IntersectionObserver" in window){
         obs.unobserve(entrada.target);
       }
     });
-  }, { threshold:.2, rootMargin:"0px 0px -6% 0px" });
+  }, { threshold:.05, rootMargin:"0px 0px 0px 0px" });
 
   document.querySelectorAll(".reveal,.cortina,#trajeto,.rule").forEach(function(el, i){
     if(el.classList.contains("reveal")) el.style.transitionDelay = ((i % 5) * 55) + "ms";
@@ -840,6 +842,23 @@ if("IntersectionObserver" in window){
 }else{
   document.querySelectorAll(".reveal,.cortina,#trajeto,.rule").forEach(function(el){ el.classList.add("in"); });
 }
+
+// rede de segurança: nada pode ficar invisível por falha de animação
+setTimeout(function(){
+  document.querySelectorAll(".cortina:not(.in)").forEach(function(el){ el.classList.add("in"); });
+}, 3000);
+
+/* imagem nunca pode ficar invisível porque a animação não disparou */
+function revelarPendentes(){
+  document.querySelectorAll(".cortina:not(.in)").forEach(function(el){
+    if(el.getBoundingClientRect().top < window.innerHeight * 1.3) el.classList.add("in");
+  });
+}
+window.addEventListener("load", revelarPendentes);
+window.addEventListener("scroll", revelarPendentes, { passive:true });
+setTimeout(function(){
+  document.querySelectorAll(".cortina:not(.in)").forEach(function(el){ el.classList.add("in"); });
+}, 4000);
 
 /* ===== FAQ ===== */
 document.querySelectorAll("#faq .item button").forEach(function(botao){

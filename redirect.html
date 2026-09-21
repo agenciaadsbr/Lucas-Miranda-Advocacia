@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <!-- Event snippet for LEAD ADSBR conversion page -->
-<script>
-  gtag('event', 'conversion', {
-      'send_to': 'AW-18466116802/JCQuCODnkIAdEMKpquVE',
-      'value': 1.0,
-      'currency': 'BRL'
-  });
-</script>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Contato recebido | Lucas Miranda Advocacia</title>
 <meta name="robots" content="noindex,nofollow">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-18466116802"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'AW-18466116802');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -38,9 +37,7 @@ body{
 :focus-visible{outline:2px solid var(--wa);outline-offset:3px}
 .caixa{max-width:470px;width:100%}
 .logo{display:flex;align-items:center;justify-content:center;gap:12px;color:#fff}
-.logo .mono{width:26px;height:26px}
-.logo .mono path{stroke:currentColor;stroke-width:1.1;fill:none}
-.logo .nome{font-family:var(--serif);font-weight:400;font-size:1.1rem;text-transform:uppercase;letter-spacing:.24em}
+.logo img{height:26px;width:auto;display:block}
 .selo{margin:38px auto 0;width:78px;height:78px;position:relative;display:grid;place-items:center}
 .selo svg.anel{position:absolute;inset:0;transform:rotate(-90deg)}
 .selo circle{fill:none;stroke-width:2}
@@ -68,8 +65,7 @@ p.lede{color:var(--white-soft);font-size:1rem;max-width:34ch;margin-inline:auto}
 
 <main class="caixa">
   <div class="logo">
-    <svg class="mono" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 26 4 6 16 22 28 6 28 26M10 6 22 26"/></svg>
-    <span class="nome">Lucas Miranda</span>
+    <img src="logo.png" alt="Lucas Miranda Advocacia" width="560" height="91">
   </div>
 
   <div class="selo" aria-hidden="true">
@@ -92,27 +88,53 @@ p.lede{color:var(--white-soft);font-size:1rem;max-width:34ch;margin-inline:auto}
 <script>
 /* ===== Configuração: trocar antes de publicar ===== */
 const CONFIG = {
-  whatsapp: "5587999999999",
+  whatsapp: "5587981857173",
   espera: 3000
 };
 
 const params = new URLSearchParams(location.search);
 const nome = (params.get("n") || "").trim();
-const numero = (params.get("w") || "").replace(/\D/g,"") || CONFIG.whatsapp;
+const numero = CONFIG.whatsapp;
 
 if(nome){
   const primeiro = nome.split(" ")[0];
   document.getElementById("titulo").textContent = "Recebemos o seu contato, " + primeiro;
 }
 
-const texto = nome
-  ? "Olá, sou " + nome + ". Vim pelo site e preciso de orientação sobre inventário."
-  : "Olá, vim pelo site e preciso de orientação sobre inventário.";
+const texto = "Vim do Google e quero falar com um advogado especialista.";
 
 const link = "https://wa.me/" + numero + "?text=" + encodeURIComponent(texto);
 document.getElementById("manual").href = link;
 
-setTimeout(function(){ location.replace(link); }, CONFIG.espera);
+/* ===== Conversão Google Ads ===== */
+// dispara só para quem chegou pelo formulário, e uma vez por lead
+let lead = null;
+try{ lead = JSON.parse(sessionStorage.getItem("lead") || "null"); }catch(e){}
+const jaConvertido = (function(){ try{ return sessionStorage.getItem("lead_convertido") === "1"; }catch(e){ return false; } })();
+
+let tempoOk = false, tagOk = false, saiu = false;
+function sair(){
+  if(saiu) return;
+  if(tempoOk && tagOk){ saiu = true; location.replace(link); }
+}
+
+if(lead && !jaConvertido){
+  // <!-- Event snippet for LEAD ADSBR conversion page -->
+  gtag('event', 'conversion', {
+    'send_to': 'AW-18466116802/JCQuCODnkIAdEMKpquVE',
+    'value': 1.0,
+    'currency': 'BRL',
+    'transaction_id': 'lm-' + (lead.data || Date.now()),
+    'event_callback': function(){ tagOk = true; sair(); }
+  });
+  try{ sessionStorage.setItem("lead_convertido", "1"); }catch(e){}
+  // se o Google demorar, não segura a pessoa além de 6 segundos
+  setTimeout(function(){ tagOk = true; sair(); }, 6000);
+}else{
+  tagOk = true;
+}
+
+setTimeout(function(){ tempoOk = true; sair(); }, CONFIG.espera);
 </script>
 </body>
 </html>
